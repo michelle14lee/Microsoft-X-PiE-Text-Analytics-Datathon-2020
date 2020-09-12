@@ -44,10 +44,18 @@ with open('embeddings.tsv','w+') as embeddings_file:
 string_metadata = []
 for index, row in unique_rows.iterrows():
     string_ = str(row['Incident Number']) + "\t" + \
-                str(row['Longitude']) + "\t" + \
-                    str(row['Latitude']) + "\t" + \
-                        str(row['Rank']) + "\t" + \
-                            str(row['Officer Race']) + "\t"
+                str(row['Rank']) + "\t" + \
+                str(row['Officer Race']) + "\t" + \
+                str(row['Officer Gender']) + "\t" + \
+                str(row['Years of SPD Service']) + "\t" + \
+                str(row['Type of Weapon']) + "\t" + \
+                str(row['Subject Gender']) + "\t" + \
+                str(row['Subject Race']) + "\t" + \
+                str(row['Subject Age']) + "\t" + \
+                str(row['Fatal']) + "\t" + \
+                str(row['On-duty']) + "\t" + \
+                str(row['Disposition']) + "\t" + \
+                str(row['Officer Disciplined?']) + "\t"
     summary = row['Summary'].split(' ')
     summary = " ".join([x.strip().rstrip() for x in summary]).rstrip().strip()
     string_ += summary
@@ -55,7 +63,7 @@ for index, row in unique_rows.iterrows():
 
 # Write embeddings metadata TSV to file
 with open('embeddings_labels.tsv','w+') as embeddings_file:
-    embeddings_file.write("IncidentNumber\tLongitude\tLatitude\tRank\tOfficerRace\tSummary" + "\n")
+    embeddings_file.write("IncidentNumber\tRank\tOfficerRace\tOfficerGender\tYearsOfSPDService\tTypeOfWeapon\tSubjectGender\tSubjectRace\tSubjectAge\tFatal\tOn-duty\tDisposition\tOfficerDisciplined?\tSummary" + "\n")
     for row in string_metadata:
         embeddings_file.write(row+"\n")
     embeddings_file.close()
