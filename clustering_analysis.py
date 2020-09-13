@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 
+import matplotlib.pyplot as plt
+
+import umap
+
 data = pd.read_csv('data_with_embeddings.csv')
 data = data.loc[:, ~data.columns.str.contains('^Unnamed')]
 
@@ -67,3 +71,41 @@ with open('embeddings_labels.tsv','w+') as embeddings_file:
     for row in string_metadata:
         embeddings_file.write(row+"\n")
     embeddings_file.close()
+
+# Create UMAP for dimensionality reduction
+reducer = umap.UMAP()
+
+# Fit UMAP to embedding data
+umap_embedding = reducer.fit_transform(cleaned_embeddings)
+
+plt.scatter(umap_embedding[:, 0], umap_embedding[:, 1])
+plt.gca().set_aspect('equal', 'datalim')
+plt.title('UMAP projection of OIS', fontsize=24)
+
+plt.show()
+
+def draw_umap(n_neighbors=15, min_dist=0.1, n_components=2, metric='euclidean', title=''):
+    fit = umap.UMAP(
+        n_neighbors=n_neighbors,
+        min_dist=min_dist,
+        n_components=n_components,
+        metric=metric
+    )
+    u = fit.fit_transform(cleaned_embeddings)
+    fig = plt.figure()
+    if n_components == 1:
+        ax = fig.add_subplot(111)
+        ax.scatter(u[:,0], range(len(u)))
+    if n_components == 2:
+        ax = fig.add_subplot(111)
+        ax.scatter(u[:,0], u[:,1])
+    if n_components == 3:
+        ax = fig.add_subplot(111, projection='3d')
+        ax.scatter(u[:,0], u[:,1], u[:,2], s=100)
+    plt.title(title, fontsize=18)
+    plt.show()
+
+draw_umap(n_neighbors=20, title='UMap Projection of OIS')
+
+from sklearn.cluster import KMeans
+
